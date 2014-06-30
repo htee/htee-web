@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   def signin
     github_authenticate!
 
-    User.find_or_create_by(name: github_user.login)
+    User.find_or_create_by(login: github_user.login)
 
     redirect_to root_url
   end
