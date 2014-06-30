@@ -16,4 +16,19 @@ class ApplicationController < ActionController::Base
 
     redirect_to root_url
   end
+
+  def record
+    if user = User.find_by(login: params[:login])
+      if params[:name].blank?
+        stream = user.streams.create
+      else
+        stream = user.streams.find_or_create_by(name: params[:name])
+      end
+
+      response.headers["Location"] = stream.path
+      render nothing: true, status: 204
+    else
+      render nothing: true, status: 403
+    end
+  end
 end
