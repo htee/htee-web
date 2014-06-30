@@ -31,4 +31,16 @@ class ApplicationController < ActionController::Base
       render nothing: true, status: 403
     end
   end
+
+  def playback
+    if user = User.find_by(login: params[:login])
+      if stream = user.streams.find_by_name(params[:name])
+        render nothing: true, status: 204
+      else
+        render nothing: true, status: 404
+      end
+    else
+      render nothing: true, status: 404
+    end
+  end
 end
