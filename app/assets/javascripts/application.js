@@ -14,7 +14,12 @@
 //= require jquery_ujs
 //= require bootstrap.min
 //= require turbolinks
+//= require ansi_up
 //= require_tree .
+
+var color = function(text) {
+  return ansi_up.ansi_to_html(text)
+}
 
 $( document ).ready(function() {
   $("pre.stream").each(function(_, pre) {
@@ -30,7 +35,7 @@ $( document ).ready(function() {
     }
 
     source.onmessage = function(e) {
-      $pre.append(JSON.parse(e.data))
+      $pre.append(color(JSON.parse(e.data)))
       scrollDown()
     }
 
