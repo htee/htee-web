@@ -17,6 +17,23 @@
 
 pre.stream {
   height: calc(100vh - 200px);
-  background-color: #151515;
-  color: #ffffff;
+  background-color: #002b36;
+  color: #fdf6e3;
 }
+
+.ansi-black-fg { color: #073642; }
+.ansi-red-fg { color: #d30102; }
+.ansi-green-fg { color: #859900; }
+.ansi-yellow-fg { color: #b58900; }
+.ansi-blue-fg { color: #268bd2; }
+.ansi-magenta-fg { color: #d33682; }
+.ansi-cyan-fg { color: #2aa198; }
+.ansi-white-fg { color: #eee8d5; }
+.ansi-bright-black-fg { color: #073642; }
+.ansi-bright-red-fg { color: #d30102; }
+.ansi-bright-green-fg { color: #859900; }
+.ansi-bright-yellow-fg { color: #b58900; }
+.ansi-bright-blue-fg { color: #268bd2; }
+.ansi-bright-magenta-fg { color: #d33682; }
+.ansi-bright-cyan-fg { color: #2aa198; }
+.ansi-bright-white-fg { color: #eee8d5; }

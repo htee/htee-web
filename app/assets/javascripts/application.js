@@ -18,7 +18,7 @@
 //= require_tree .
 
 var color = function(text) {
-  return ansi_up.ansi_to_html(text)
+  return ansi_up.ansi_to_html(text, {use_classes: true})
 }
 
 $( document ).ready(function() {
