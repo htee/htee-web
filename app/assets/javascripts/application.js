@@ -17,15 +17,30 @@
 //= require_tree .
 
 $( document ).ready(function() {
-  $("pre.stream").each(function(_, obj) {
-    var pre = $(obj)
-    var url = pre.attr("href")
+  $("pre.stream").each(function(_, pre) {
+    var $pre = $(pre)
+    var url = $pre.attr("href")
     var source = new EventSource(url)
 
-    source.onmessage = function(e) { pre.append(JSON.parse(e.data)) }
+    source.onmessage = function(e) { $pre.append(JSON.parse(e.data)) }
 
     source.onerror = function(e) { console.log(e) }
 
     source.addEventListener('eof', function(e) { source.close() }, false)
+
+    var timerId = setInterval(function() { pre.scrollTop = pre.scrollHeight }, 100)
+
+    $pre.bind('mousewheel', function(e) {
+      if (e.originalEvent.wheelDelta >= 0) {
+        clearInterval(timerId);
+        timerId = null;
+      } else {
+        if ($pre.scrollTop() + $pre.outerHeight() > pre.scrollHeight) {
+          if (timerId == null) {
+            timerId = setInterval(function() { pre.scrollTop = pre.scrollHeight }, 100)
+          }
+        }
+      }
+    });
   })
 })
