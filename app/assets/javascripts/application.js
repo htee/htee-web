@@ -21,25 +21,28 @@ $( document ).ready(function() {
     var $pre = $(pre)
     var url = $pre.attr("href")
     var source = new EventSource(url)
+    var scrollLock = true
 
-    source.onmessage = function(e) { $pre.append(JSON.parse(e.data)) }
+    var scrollDown = function(e) {
+      if (scrollLock) {
+        pre.scrollTop = pre.scrollHeight
+      }
+    }
+
+    source.onmessage = function(e) {
+      $pre.append(JSON.parse(e.data))
+      scrollDown()
+    }
 
     source.onerror = function(e) { console.log(e) }
 
     source.addEventListener('eof', function(e) { source.close() }, false)
 
-    var timerId = setInterval(function() { pre.scrollTop = pre.scrollHeight }, 100)
-
     $pre.bind('mousewheel', function(e) {
       if (e.originalEvent.wheelDelta >= 0) {
-        clearInterval(timerId);
-        timerId = null;
-      } else {
-        if ($pre.scrollTop() + $pre.outerHeight() > pre.scrollHeight) {
-          if (timerId == null) {
-            timerId = setInterval(function() { pre.scrollTop = pre.scrollHeight }, 100)
-          }
-        }
+        scrollLock = false
+      } else if ($pre.scrollTop() + $pre.outerHeight() > pre.scrollHeight) {
+        scrollLock = true
       }
     });
   })
