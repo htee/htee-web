@@ -14,3 +14,9 @@
  *= require_tree .
  *= require_self
  */
+
+pre.stream {
+  height: calc(100vh - 200px);
+  background-color: #151515;
+  color: #ffffff;
+}

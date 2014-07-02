@@ -15,3 +15,17 @@
 //= require bootstrap.min
 //= require turbolinks
 //= require_tree .
+
+$( document ).ready(function() {
+  $("pre.stream").each(function(_, obj) {
+    var pre = $(obj)
+    var url = pre.attr("href")
+    var source = new EventSource(url)
+
+    source.onmessage = function(e) { pre.append(JSON.parse(e.data)) }
+
+    source.onerror = function(e) { console.log(e) }
+
+    source.addEventListener('eof', function(e) { source.close() }, false)
+  })
+})
