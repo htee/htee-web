@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate, only: :record
+  before_action :find_user, only: [:dash, :settings]
 
   def login
     github_authenticate!
@@ -20,7 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   def record
-    owner = User.find_by(login: params[:login])
+    owner = User.find_by(login: params[:owner])
     return render_unauthorized if owner != @user
 
     if params[:name].blank?
@@ -33,10 +34,10 @@ class ApplicationController < ActionController::Base
   end
 
   def playback
-    @user = User.find_by(login: params[:login])
-    return render nothing: true, status: 404 if @user.nil?
+    @owner  = User.find_by(login: params[:owner])
+    return render nothing: true, status: 404 if @owner.nil?
 
-    @stream = @user.streams.find_by_name(params[:name])
+    @stream = @owner.streams.find_by_name(params[:name])
     return render nothing: true, status: 404 if @stream.nil?
 
     return render :sse if sse_supported_browser? unless event_stream_request?
@@ -45,7 +46,6 @@ class ApplicationController < ActionController::Base
   end
 
   def dash
-    @user    = User.find_by(login: github_user.login)
     @streams = @user.streams.
       paginate(:page => params[:page], :per_page => 10).
       order(created_at: :desc)
@@ -76,5 +76,9 @@ class ApplicationController < ActionController::Base
   def render_unauthorized
     self.headers['WWW-Authenticate'] = 'Token realm="Application"'
     render nothing: true, status: 401
+  end
+
+  def find_user
+    @user = User.find_by(login: github_user.login)
   end
 end

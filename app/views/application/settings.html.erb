@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading">API Tokens</div>
+      <ul class="list-group">
+      <%- @user.tokens.each do |token| -%>
+        <li class="list-group-item"><%= token.key %></li>
+      <%- end -%>
+      </ul>
+    </div>
+  </div>
+</div>
