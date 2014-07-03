@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate, only: :record
 
-  def signin
+  def login
     github_authenticate!
 
     User.find_or_create_by(login: github_user.login)
@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
     redirect_to root_url
   end
 
-  def signout
+  def logout
     github_logout
 
     redirect_to root_url

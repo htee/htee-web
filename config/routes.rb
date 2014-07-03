@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  get '/signin'  => 'application#signin', as: :signin
-  get '/signout' => 'application#signout', as: :signout
+  get '/login'  => 'application#login', as: :login
+  get '/logout' => 'application#logout', as: :logout
 
   post '/:login(/:name)' => 'application#record'
   get  '/:login/:name'   => 'application#playback', as: :stream

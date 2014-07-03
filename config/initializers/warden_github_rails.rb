@@ -1,3 +1,3 @@
 Warden::GitHub::Rails.setup do |config|
-  config.add_scope :user, redirect_uri: '/signin', scope: 'read:org'
+  config.add_scope :user, scope: 'read:org'
 end
