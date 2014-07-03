@@ -1,12 +1,23 @@
 <div class="container">
   <div class="row">
     <div class="panel panel-default">
-      <div class="panel-heading">API Tokens</div>
+      <div class="panel-heading">
+        <h3 class="panel-title">API Tokens</h3>
+      </div>
       <ul class="list-group">
       <%- @user.tokens.each do |token| -%>
         <li class="list-group-item"><%= token.key %></li>
       <%- end -%>
       </ul>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">Config File</h4>
+      </div>
+      <div class="panel-body">
+        <pre><button type="button" class="btn btn-xs btn-info pull-right">Download</button><code><%= render 'config.toml', locals: {user: @user} %></code></pre>
+        Save this as your <strong>~/.htee.conf</strong> file.
+      </div>
     </div>
   </div>
 </div>
