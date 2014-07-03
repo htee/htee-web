@@ -4,7 +4,11 @@ class ApplicationController < ActionController::Base
   def login
     github_authenticate!
 
-    User.find_or_create_by(login: github_user.login)
+    user = User.find_or_create_by(login: github_user.login)
+
+    if user.email != github_user.email || user.name != github_user.name
+      user.update(email: github_user.email, name: github_user.name)
+    end
 
     redirect_to root_url
   end
@@ -41,7 +45,7 @@ class ApplicationController < ActionController::Base
   end
 
   def dash
-    @user = User.find_by(login: github_user.login)
+    @user    = User.find_by(login: github_user.login)
     @streams = @user.streams.
       paginate(:page => params[:page], :per_page => 10).
       order(created_at: :desc)

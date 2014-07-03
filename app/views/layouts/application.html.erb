@@ -16,6 +16,7 @@
         <%- if github_user -%>
         <div class="dropdown">
           <button class="btn navbar-btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <%= gravatar_image_tag(github_user.email) %>
             <%= github_user.name %>
             <span class="caret"></span>
           </button>
