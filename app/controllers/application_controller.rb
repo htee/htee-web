@@ -40,6 +40,11 @@ class ApplicationController < ActionController::Base
     downstream_continue(@stream)
   end
 
+  def dash
+    @user = User.find_by(login: github_user.login)
+    @streams = @user.streams.order(created_at: :desc)
+  end
+
   def downstream_continue(stream)
     render nothing: true, status: 204, location: stream.path
   end

@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="row">
+
+  <%- @streams.each do |stream| -%>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= link_to stream.nwo, stream_path(stream.owner, stream.name) %></h3>
+      </div>
+      <div class="panel-body">
+        <pre class="stream stream-preview" href="<%= stream_url(stream.owner, stream.name) %>"></pre>
+      </div>
+    </div>
+  <%- end %>
+
+  </div>
+</div>
+
+
+<script src="https://gist.github.com/benburkert/de171c9df37bdf0b2ee0.js"></script>

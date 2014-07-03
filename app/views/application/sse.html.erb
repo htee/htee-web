@@ -5,7 +5,8 @@
         <h3 class="panel-title"><%= @stream.nwo %></h3>
       </div>
       <div class="panel-body">
-        <pre class="stream" href="<%= stream_url(@user.login, @stream.name) %>"></pre>
+        <pre class="stream stream-full" href="<%= stream_url(@stream.owner, @stream.name) %>"></pre>
       </div>
+    </div>
   </div>
 </div>

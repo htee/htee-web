@@ -16,9 +16,16 @@
  */
 
 pre.stream {
-  height: calc(100vh - 200px);
   background-color: #002b36;
   color: #fdf6e3;
+}
+
+pre.stream-full {
+  height: calc(100vh - 200px);
+}
+
+pre.stream-preview {
+  height: 200px;
 }
 
 .ansi-black-fg { color: #073642; }

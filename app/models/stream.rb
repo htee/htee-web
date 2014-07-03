@@ -8,11 +8,15 @@ class Stream < ActiveRecord::Base
     self.name = self.name.parameterize
   end
 
+  def owner
+    user.login
+  end
+
   def nwo
-    "#{user.login}/#{name}"
+    "#{owner}/#{name}"
   end
 
   def path
-    "/#{user.login}/#{name}"
+    "/#{nwo}"
   end
 end

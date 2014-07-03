@@ -5,9 +5,11 @@ Rails.application.routes.draw do
   post '/:login(/:name)' => 'application#record'
   get  '/:login/:name'   => 'application#playback', as: :stream
 
-  github_unauthenticated do
-    get '/' => 'application#splash', as: :splash
+  github_authenticated do
+    get '/' => 'application#dash', as: :dash
   end
+
+  get '/' => 'application#splash', as: :splash
 
   root to: 'application#splash'
 
