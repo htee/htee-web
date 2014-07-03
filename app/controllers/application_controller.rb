@@ -42,7 +42,9 @@ class ApplicationController < ActionController::Base
 
   def dash
     @user = User.find_by(login: github_user.login)
-    @streams = @user.streams.order(created_at: :desc)
+    @streams = @user.streams.
+      paginate(:page => params[:page], :per_page => 10).
+      order(created_at: :desc)
   end
 
   def downstream_continue(stream)
