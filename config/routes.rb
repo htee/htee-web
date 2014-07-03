@@ -2,13 +2,14 @@ Rails.application.routes.draw do
   get '/login'  => 'application#login', as: :login
   get '/logout' => 'application#logout', as: :logout
 
+  github_authenticated do
+    get '/settings/htee.conf' => 'application#config_file', as: :config
+    get '/settings'           => 'application#settings', as: :settings
+    get '/'                   => 'application#dash', as: :dash
+  end
+
   post '/:owner(/:name)' => 'application#record'
   get  '/:owner/:name'   => 'application#playback', as: :stream
-
-  github_authenticated do
-    get '/settings' => 'application#settings', as: :settings
-    get '/'         => 'application#dash', as: :dash
-  end
 
   get '/' => 'application#splash', as: :splash
 

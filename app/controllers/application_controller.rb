@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate, only: :record
-  before_action :find_user, only: [:dash, :settings]
+  before_action :find_user, only: [:dash, :settings, :config_file]
 
   def login
     github_authenticate!
@@ -49,6 +49,10 @@ class ApplicationController < ActionController::Base
     @streams = @user.streams.
       paginate(:page => params[:page], :per_page => 10).
       order(created_at: :desc)
+  end
+
+  def config_file
+    render partial: 'config.toml', content_type: 'application/octet-stream'
   end
 
   def downstream_continue(stream)

@@ -15,7 +15,7 @@
         <h4 class="panel-title">Config File</h4>
       </div>
       <div class="panel-body">
-        <pre><button type="button" class="btn btn-xs btn-info pull-right">Download</button><code><%= render 'config.toml', locals: {user: @user} %></code></pre>
+        <pre><%= link_to 'Download', config_path, class: 'btn btn-xs btn-info pull-right' %><code><%= render 'config.toml', locals: {user: @user} %></code></pre>
         Save this as your <strong>~/.htee.conf</strong> file.
       </div>
     </div>
