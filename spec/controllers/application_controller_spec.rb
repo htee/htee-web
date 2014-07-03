@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe ApplicationController, :type => :controller do
 
   let(:user) { User.create(:login => SecureRandom.hex(5)) }
+  let(:token_auth) { ActionController::HttpAuthentication::Token.encode_credentials(user.tokens.first.key) }
 
   describe "GET 'splash'" do
     it "returns http success" do
@@ -12,6 +13,10 @@ RSpec.describe ApplicationController, :type => :controller do
   end
 
   describe "POST 'record'" do
+    before do
+      request.env['HTTP_AUTHORIZATION'] = token_auth
+    end
+
     describe "without a name" do
       it "returns a 204 & Location header to the stream" do
         post :record, login: user.login
@@ -27,7 +32,7 @@ RSpec.describe ApplicationController, :type => :controller do
         post :record, login: "fake"
 
         expect(response).to_not be_success
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(401)
       end
     end
 

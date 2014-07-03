@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  before_action :authenticate, only: :record
+
   def signin
     github_authenticate!
 
@@ -14,13 +16,13 @@ class ApplicationController < ActionController::Base
   end
 
   def record
-    user = User.find_by(login: params[:login])
-    return render nothing: true, status: 403 if user.nil?
+    owner = User.find_by(login: params[:login])
+    return render_unauthorized if owner != @user
 
     if params[:name].blank?
-      stream = user.streams.create
+      stream = @user.streams.create
     else
-      stream = user.streams.find_or_create_by(name: params[:name])
+      stream = @user.streams.find_or_create_by(name: params[:name])
     end
 
     downstream_continue(stream)
@@ -48,5 +50,20 @@ class ApplicationController < ActionController::Base
 
   def event_stream_request?
     request.env['HTTP_ACCEPT'] == 'text/event-stream'
+  end
+
+  def authenticate
+    token_authenticate! || render_unauthorized
+  end
+
+  def token_authenticate!
+    authenticate_or_request_with_http_token do |token, options|
+      @user = User.includes(:tokens).where("tokens.key" => token).first
+    end
+  end
+
+  def render_unauthorized
+    self.headers['WWW-Authenticate'] = 'Token realm="Application"'
+    render nothing: true, status: 401
   end
 end
