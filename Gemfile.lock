@@ -153,6 +153,9 @@ GEM
     warden-github-rails (1.1.0)
       railties (>= 3.1)
       warden-github (~> 1.0)
+    will_paginate (3.0.6)
+    will_paginate-bootstrap (1.0.0)
+      will_paginate (>= 3.0.3)
 
 PLATFORMS
   ruby
@@ -171,3 +174,4 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   unicorn
   warden-github-rails
+  will_paginate-bootstrap
