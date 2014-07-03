@@ -11,6 +11,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'unicorn'
 gem 'warden-github-rails'
 gem 'will_paginate-bootstrap'
+gem 'gravatar_image_tag'
 
 group :development do
   gem 'spring'
