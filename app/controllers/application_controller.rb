@@ -62,7 +62,11 @@ class ApplicationController < ActionController::Base
 
     stream.destroy
 
-    redirect_to :back
+    if request.referer == stream_url(stream.owner, stream.name)
+      redirect_to dash_path
+    else
+      redirect_to :back
+    end
   end
 
   def config_file

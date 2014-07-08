@@ -1,12 +1,5 @@
 <div class="container">
   <div class="row">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= @stream.nwo %></h3>
-      </div>
-      <div class="panel-body">
-        <pre class="stream stream-full" href="<%= stream_url(@stream.owner, @stream.name) %>"></pre>
-      </div>
-    </div>
+    <%= render partial: "stream", locals: {stream: @stream, stream_class: "stream-full"} %>
   </div>
 </div>
