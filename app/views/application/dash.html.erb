@@ -4,7 +4,10 @@
   <%- @streams.each do |stream| -%>
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><%= link_to stream.nwo, stream_path(stream.owner, stream.name) %></h3>
+        <%= button_to "Delete", stream_path(stream.owner, stream.name), method: :delete, class: 'btn btn-xs btn-danger pull-right' %>
+        <h3 class="panel-title">
+          <%= link_to stream.nwo, stream_path(stream.owner, stream.name) %>
+        </h3>
       </div>
       <div class="panel-body">
         <pre class="stream stream-preview" href="<%= stream_url(stream.owner, stream.name) %>"></pre>

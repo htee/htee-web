@@ -5,7 +5,10 @@ Rails.application.routes.draw do
   github_authenticated do
     get '/settings/htee.conf' => 'application#config_file', as: :config
     get '/settings'           => 'application#settings', as: :settings
-    get '/'                   => 'application#dash', as: :dash
+
+    delete '/:owner/:name' => 'application#delete'
+
+    get '/' => 'application#dash', as: :dash
   end
 
   post '/:owner(/:name)' => 'application#record'

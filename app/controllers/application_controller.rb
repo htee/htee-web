@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception, except: :record
+
   before_action :authenticate, only: :record
-  before_action :find_user, only: [:dash, :settings, :config_file]
+  before_action :find_user, only: [:dash, :settings, :config_file, :delete]
 
   def login
     github_authenticate!
@@ -49,6 +51,18 @@ class ApplicationController < ActionController::Base
     @streams = @user.streams.
       paginate(:page => params[:page], :per_page => 10).
       order(created_at: :desc)
+  end
+
+  def delete
+    owner = User.find_by(login: params[:owner])
+    return render nothing: true, status: 401 unless @user == owner
+
+    stream = owner.streams.find_by_name(params[:name])
+    return render nothing: true, status: 404 if stream.nil?
+
+    stream.destroy
+
+    redirect_to :back
   end
 
   def config_file
