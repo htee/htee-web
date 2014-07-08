@@ -12,6 +12,7 @@ gem 'unicorn'
 gem 'warden-github-rails'
 gem 'will_paginate-bootstrap'
 gem 'gravatar_image_tag'
+gem 'toml'
 
 group :development do
   gem 'spring'
