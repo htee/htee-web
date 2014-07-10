@@ -11,8 +11,8 @@ Rails.application.routes.draw do
     get '/' => 'application#dash', as: :dash
   end
 
-  post '/:owner(/:name)' => 'application#record'
-  get  '/:owner/:name'   => 'application#playback', as: :stream
+  post '/'             => 'application#record'
+  get  '/:owner/:name' => 'application#playback', as: :stream
 
   get '/' => 'application#splash', as: :splash
 

@@ -17,45 +17,16 @@ RSpec.describe ApplicationController, :type => :controller do
       request.env['HTTP_AUTHORIZATION'] = token_auth
     end
 
-    describe "without a name" do
-      it "returns a 204 & Location header to the stream" do
-        post :record, owner: user.login
+    it "returns a 202 rewrite with a path to the stream" do
+      post :record
 
-        expect(response).to be_success
-        expect(response.status).to eq(204)
+      expect(response).to be_success
+      expect(response.status).to eq(202)
 
-        location = response.headers['Location']
-        expect(location).to match(%r{^/#{user.login}/[0-9a-f]{20}$})
-      end
+      rewrite = JSON.parse(response.body)
+      location = rewrite['path']
 
-      it "returns 403 when the owner does not exist" do
-        post :record, owner: "fake"
-
-        expect(response).to_not be_success
-        expect(response.status).to eq(401)
-      end
-    end
-
-    describe "with the name of a new stream" do
-      it "returns a 204 & Location header to the stream" do
-        post :record, owner: user.login, name: 'test-stream'
-
-        expect(response).to be_success
-        expect(response.status).to eq(204)
-
-        location = response.headers['Location']
-        expect(location).to eq("/#{user.login}/test-stream")
-      end
-
-      it "converts a url unsafe name" do
-        post :record, owner: user.login, name: 'hello world'
-
-        expect(response).to be_success
-        expect(response.status).to eq(204)
-
-        location = response.headers['Location']
-        expect(location).to eq("/#{user.login}/hello-world")
-      end
+      expect(location).to match(%r{^/#{user.login}/[0-9a-f]{20}$})
     end
   end
 
@@ -76,13 +47,13 @@ RSpec.describe ApplicationController, :type => :controller do
       expect(response.status).to eq(404)
     end
 
-    it "returns a 204 for a stream" do
+    it "returns a 202 for a stream" do
       stream = user.streams.create
 
       get :playback, owner: user.login, name: stream.name
 
       expect(response).to be_success
-      expect(response.status).to eq(204)
+      expect(response.status).to eq(202)
     end
   end
 end

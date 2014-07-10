@@ -23,14 +23,7 @@ class ApplicationController < ActionController::Base
   end
 
   def record
-    owner = User.find_by(login: params[:owner])
-    return render_unauthorized if owner != @user
-
-    if params[:name].blank?
-      stream = @user.streams.create
-    else
-      stream = @user.streams.find_or_create_by(name: params[:name])
-    end
+    stream = @user.streams.create
 
     downstream_rewrite(path: stream.path)
   end
