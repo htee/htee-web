@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
       stream = @user.streams.find_or_create_by(name: params[:name])
     end
 
-    downstream_continue(stream)
+    downstream_rewrite(path: stream.path)
   end
 
   def playback
@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
 
     return render :sse if sse_supported_browser? unless event_stream_request?
 
-    downstream_continue(@stream)
+    downstream_rewrite(path: @stream.path)
   end
 
   def dash
@@ -73,8 +73,8 @@ class ApplicationController < ActionController::Base
     render partial: 'config.toml', content_type: 'application/octet-stream'
   end
 
-  def downstream_continue(stream)
-    render nothing: true, status: 204, location: stream.path
+  def downstream_rewrite(request = {})
+    render status: 202, json: request_hash.merge(request)
   end
 
   def sse_supported_browser?
@@ -102,5 +102,12 @@ class ApplicationController < ActionController::Base
 
   def find_user
     @user = User.find_by(login: github_user.login)
+  end
+
+  def request_hash
+    {
+      method:  request.method,
+      path:    request.fullpath,
+    }
   end
 end
