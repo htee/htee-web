@@ -38,7 +38,7 @@ $( document ).ready(function() {
       scrollDown()
     }
 
-    source.onerror = function(e) { console.log(e) }
+    source.onerror = function(e) { source.close() }
 
     source.addEventListener('eof', function(e) { source.close() }, false)
 
