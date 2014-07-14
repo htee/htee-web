@@ -13,20 +13,36 @@ RSpec.describe ApplicationController, :type => :controller do
   end
 
   describe "POST 'record'" do
-    before do
-      request.env['HTTP_AUTHORIZATION'] = token_auth
+    describe "with an authorization token" do
+      before do
+        request.env['HTTP_AUTHORIZATION'] = token_auth
+      end
+
+      it "returns a 202 rewrite with a path to the stream" do
+        post :record
+
+        expect(response).to be_success
+        expect(response.status).to eq(202)
+
+        rewrite = JSON.parse(response.body)
+        location = rewrite['path']
+
+        expect(location).to match(%r{^/#{user.login}/[0-9a-f]{20}$})
+      end
     end
 
-    it "returns a 202 rewrite with a path to the stream" do
-      post :record
+    describe "without an authorization token" do
+      it "returns a 202 rewrite with a path to an anonymous stream" do
+        post :record
 
-      expect(response).to be_success
-      expect(response.status).to eq(202)
+        expect(response).to be_success
+        expect(response.status).to eq(202)
 
-      rewrite = JSON.parse(response.body)
-      location = rewrite['path']
+        rewrite = JSON.parse(response.body)
+        location = rewrite['path']
 
-      expect(location).to match(%r{^/#{user.login}/[0-9a-f]{20}$})
+        expect(location).to match(%r{^/anonymous/[0-9a-f]{20}$})
+      end
     end
   end
 

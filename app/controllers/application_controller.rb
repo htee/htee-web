@@ -83,12 +83,18 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate
-    token_authenticate! || render_unauthorized
+    anon_authenticate || token_authenticate || render_unauthorized
   end
 
-  def token_authenticate!
+  def token_authenticate
     authenticate_or_request_with_http_token do |token, options|
       @user = User.includes(:tokens).where("tokens.key" => token).first
+    end
+  end
+
+  def anon_authenticate
+    if request.headers['HTTP_AUTHORIZATION'].blank?
+      @user = User.anon
     end
   end
 
