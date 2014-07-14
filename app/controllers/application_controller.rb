@@ -62,6 +62,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def ping
+    render text: "PONG!"
+  end
+
   def config_file
     render partial: 'config.toml', content_type: 'application/octet-stream'
   end

@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get '/login'  => 'application#login', as: :login
   get '/logout' => 'application#logout', as: :logout
+  get '/ping'   => 'application#ping'
 
   github_authenticated do
     get '/settings/htee.conf' => 'application#config_file', as: :config
