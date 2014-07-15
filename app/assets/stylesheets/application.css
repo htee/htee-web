@@ -49,3 +49,18 @@ img.gravatar-img {
   width: 32px;
   height: auto;
 }
+
+.htee-font {
+  font-family: "htee","Raleway","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+@font-face {
+    font-family: 'htee';
+    src: url('htee-regular-webfont.eot');
+    src: url('htee-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('htee-regular-webfont.woff') format('woff'),
+         url('htee-regular-webfont.ttf') format('truetype'),
+         url('htee-regular-webfont.svg#hteeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
