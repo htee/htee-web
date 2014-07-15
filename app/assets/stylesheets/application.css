@@ -44,3 +44,8 @@ pre.stream-preview {
 .ansi-bright-magenta-fg { color: #797fd4; }
 .ansi-bright-cyan-fg { color: #15968d; }
 .ansi-bright-white-fg { color: #d2d8d9; }
+
+img.gravatar-img {
+  width: 32px;
+  height: auto;
+}
