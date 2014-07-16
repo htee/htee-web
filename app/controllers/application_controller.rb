@@ -131,6 +131,8 @@ class ApplicationController < ActionController::Base
 
   def find_user
     @user = User.find_by(login: github_user.login)
+
+    redirect_to logout_path if @user.nil?
   end
 
   def request_hash
