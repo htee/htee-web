@@ -26,6 +26,7 @@ $( document ).ready(function() {
     var url = $pre.attr("href")
     var source = new EventSource(url)
     var scrollLock = true
+    var statusSpan = $pre.parent().siblings().find("span.status")
 
     var scrollDown = function(e) {
       if (scrollLock) {
@@ -38,7 +39,11 @@ $( document ).ready(function() {
       scrollDown()
     }
 
-    source.onerror = function(e) { source.close() }
+    source.onerror = function(e) {
+      source.close()
+      statusSpan.addClass('finished')
+      statusSpan.removeClass('recording')
+    }
 
     source.addEventListener('eof', function(e) { source.close() }, false)
 

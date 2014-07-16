@@ -46,7 +46,7 @@ pre.stream-preview {
 .ansi-bright-white-fg { color: #d2d8d9; }
 
 img.gravatar-img {
-  width: 32px;
+  width: 28px;
   height: auto;
 }
 
@@ -63,4 +63,20 @@ img.gravatar-img {
          url('htee-regular-webfont.svg#hteeregular') format('svg');
     font-weight: normal;
     font-style: normal;
+}
+
+@-webkit-keyframes redPulse {
+  from { color: #bc330d; }
+  50% { color: #e33100; }
+  to { color: #bc330d; }
+}
+
+.recording {
+  -webkit-animation-name: redPulse;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-iteration-count: infinite;
+}
+
+.finished {
+  color: #333333;
 }
