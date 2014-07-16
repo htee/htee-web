@@ -72,4 +72,25 @@ RSpec.describe ApplicationController, :type => :controller do
       expect(response.status).to eq(202)
     end
   end
+
+  describe "PUT 'update'" do
+    it "returns a 204 on a successful update" do
+      stream = user.streams.create
+
+      expect(stream).to be_opened
+
+      put :update, owner: user.login, name: stream.name, status: :closed
+
+      expect(stream.reload).to be_closed
+    end
+
+    it "returns a 400 if a status is missing" do
+      stream = user.streams.create
+
+      put :update, owner: user.login, name: stream.name
+
+      expect(response).to_not be_success
+      expect(response.status).to eq(400)
+    end
+  end
 end

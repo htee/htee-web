@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140714204408) do
+ActiveRecord::Schema.define(version: 20140715231449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,8 +21,10 @@ ActiveRecord::Schema.define(version: 20140714204408) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.integer  "status",     default: 1
   end
 
+  add_index "streams", ["status"], name: "index_streams_on_status", using: :btree
   add_index "streams", ["user_id"], name: "index_streams_on_user_id", using: :btree
 
   create_table "tokens", force: true do |t|

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   end
 
   post '/'             => 'application#record'
+  put  '/:owner/:name' => 'application#update'
   get  '/:owner/:name' => 'application#playback', as: :stream
 
   get '/' => 'application#splash', as: :splash

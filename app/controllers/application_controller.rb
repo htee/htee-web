@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception, except: :record
+  protect_from_forgery with: :exception, except: [:record, :update]
 
   before_action :authenticate, only: :record
   before_action :find_user, only: [:dash, :settings, :config_file, :delete]
@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   end
 
   def record
-    stream = @user.streams.create
+    stream = @user.streams.create(status: :opened)
 
     downstream_rewrite(path: stream.path)
   end
@@ -59,6 +59,26 @@ class ApplicationController < ActionController::Base
       redirect_to dash_path
     else
       redirect_to :back
+    end
+  end
+
+  def update
+    owner = User.find_by(login: params[:owner])
+    return render nothing: true, status: 404 if owner.nil?
+
+    stream = owner.streams.find_by_name(params[:name])
+    return render nothing: true, status: 404 if stream.nil?
+
+    if params[:status].nil?
+      return render_errors('Missing required status parameter')
+    end
+
+    status = params[:status].to_sym
+
+    if stream.update(status: status)
+      render nothing: true, status: 204
+    else
+      return render_errors(*stream.errors.full_messages)
     end
   end
 
@@ -101,6 +121,12 @@ class ApplicationController < ActionController::Base
   def render_unauthorized
     self.headers['WWW-Authenticate'] = 'Token realm="Application"'
     render nothing: true, status: 401
+  end
+
+  def render_errors(*errors)
+    render status: 400, json: {
+      errors: errors
+    }
   end
 
   def find_user

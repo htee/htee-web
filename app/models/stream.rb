@@ -3,6 +3,12 @@ class Stream < ActiveRecord::Base
 
   belongs_to :user
 
+  enum status: {
+    :created => 0,
+    :opened  => 1,
+    :closed  => 2,
+  }
+
   def init
     self.name ||= SecureRandom.hex(10)
     self.name = self.name.parameterize
