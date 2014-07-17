@@ -55,6 +55,8 @@ class ApplicationController < ActionController::Base
 
     stream.destroy
 
+    set_downstream_continue
+
     if request.referer == stream_url(stream.owner, stream.name)
       redirect_to dash_path
     else
@@ -140,5 +142,9 @@ class ApplicationController < ActionController::Base
       method:  request.method,
       path:    request.fullpath,
     }
+  end
+
+  def set_downstream_continue
+    response.headers['X-Htee-Downstream-Continue'] = 'yes'
   end
 end
