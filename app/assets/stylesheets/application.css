@@ -15,7 +15,7 @@
  *= require_self
  */
 
-pre.stream {
+pre.stream, .gist-line, .gist {
   color: #d2d8d9;
   background-color: #25292a;
 }
@@ -24,7 +24,7 @@ pre.stream-full {
   height: calc(100vh - 200px);
 }
 
-pre.stream-preview {
+pre.stream-preview, .file-data {
   height: 200px;
 }
 

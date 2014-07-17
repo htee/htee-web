@@ -46,8 +46,8 @@ $( document ).ready(function() {
       statusSpan.addClass('finished')
       statusSpan.removeClass('recording')
 
-      deleteButton = panel.find("input.delete")
-      deleteButton.removeClass('invisible')
+      deleteForm = panel.find("form.delete")
+      deleteForm.removeClass('invisible')
     }
 
     source.addEventListener('eof', function(e) { source.close() }, false)
@@ -59,5 +59,22 @@ $( document ).ready(function() {
         scrollLock = true
       }
     });
+  })
+
+  $(".gist").each(function(_, gist) {
+    var bgColor = $(gist).css("background-color")
+    $(gist).find(".gist-data").css("background-color", bgColor)
+
+    $(gist).find("pre.line-pre > .line > span").each(function(_, span) {
+      $span = $(span)
+      line = span.innerText
+
+      $span.empty()
+
+      $span.addClass("gist-line")
+      $span.removeClass("go")
+
+      $span.append(color(line))
+    })
   })
 })
