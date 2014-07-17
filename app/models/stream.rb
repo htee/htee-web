@@ -7,6 +7,7 @@ class Stream < ActiveRecord::Base
     :created => 0,
     :opened  => 1,
     :closed  => 2,
+    :gisted  => 3,
   }
 
   def init
@@ -24,5 +25,25 @@ class Stream < ActiveRecord::Base
 
   def path
     "/#{nwo}"
+  end
+
+  def gist(octokit, url)
+    response = Rack::Client.get(url)
+
+    if response.status == 200
+      gist = octokit.create_gist \
+        public: false,
+        files: {
+          "htee:#{name}.sh-session" => {
+            content: response.body,
+          },
+        }
+
+      update(gist_id: gist[:id], status: :gisted)
+    end
+  end
+
+  def gist_path
+    "/#{owner}/#{gist_id}"
   end
 end

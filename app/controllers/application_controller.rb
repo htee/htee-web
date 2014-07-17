@@ -35,6 +35,10 @@ class ApplicationController < ActionController::Base
     @stream = @owner.streams.find_by_name(params[:name])
     return render nothing: true, status: 404 if @stream.nil?
 
+    if @stream.gisted?
+      return redirect_to "https://gist.github.com#{@stream.gist_path}/raw", status: 301
+    end
+
     return render :sse if sse_supported_browser? unless event_stream_request?
 
     downstream_rewrite(path: @stream.path)
@@ -53,7 +57,11 @@ class ApplicationController < ActionController::Base
     stream = owner.streams.find_by_name(params[:name])
     return render nothing: true, status: 404 if stream.nil?
 
-    stream.destroy
+    if params[:commit] == 'gist'
+      stream.gist(github_user.api, request.url)
+    else
+      stream.destroy
+    end
 
     set_downstream_continue
 

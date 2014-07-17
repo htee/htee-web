@@ -1,14 +1,23 @@
+
 <div class="panel panel-default">
   <div class="panel-heading">
-    <%= button_to "Delete", stream_path(stream.owner, stream.name),
-      method: :delete, class: "#{'invisible ' if stream.opened?}btn btn-xs btn-danger pull-right delete" %>
+    <%= form_tag(stream_path(stream.owner, stream.name), method: :delete, class: "delete pull-right #{'invisible' if stream.opened?}") do %>
+      <%= submit_tag('Delete', value: 'delete', class: "btn btn-xs btn-danger") %>
+      <%- unless stream.gisted? %>
+        <%= submit_tag('Gist', value: 'gist', class: "btn btn-xs btn-warning") %>
+      <%- end %>
+    <% end %>
     <h3 class="panel-title">
       <span class="status htee-font <%= stream.opened? ? 'recording' : 'finished' %>">ht</span>
       <%= link_to stream.nwo, stream_path(stream.owner, stream.name) %>
     </h3>
   </div>
   <div class="panel-body">
+  <%- if stream.gisted? %>
+    <script src="https://gist.github.com<%= stream.gist_path %>.js"></script>
+  <%- else %>
     <pre class="stream <%= stream_class %>" href="<%= stream_url(stream.owner, stream.name) %>"></pre>
+  <%- end %>
   </div>
 </div>
 
