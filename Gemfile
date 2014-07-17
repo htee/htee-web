@@ -13,6 +13,8 @@ gem 'warden-github-rails'
 gem 'will_paginate-bootstrap'
 gem 'gravatar_image_tag'
 gem 'toml'
+gem 'rack-client'
+gem 'foreman'
 
 group :development do
   gem 'spring'
