@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get '/login'  => 'application#login', as: :login
+  post '/login' => 'application#login'
   get '/logout' => 'application#logout', as: :logout
   get '/ping'   => 'application#ping'
 
