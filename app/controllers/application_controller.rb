@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception, except: [:record, :update]
+  protect_from_forgery with: :exception, except: [:record, :record_lite, :update]
 
   before_action :authenticate, only: :record
-  before_action :find_user, only: [:dash, :settings, :config_file, :delete]
+  before_action :find_user,    only: [:dash, :settings, :config_file, :delete]
 
   def login
     github_authenticate!
@@ -23,7 +23,24 @@ class ApplicationController < ActionController::Base
   end
 
   def record
-    stream = @user.streams.create(status: :opened)
+    if request.xhr?
+      stream = @user.streams.create(status: :created)
+      render_lite_stream(stream)
+    else
+      stream = @user.streams.create(status: :opened)
+
+      downstream_rewrite(path: stream.path)
+    end
+  end
+
+  def record_lite
+    owner = User.find_by(login: params[:owner])
+    return render nothing: true, status: 404 if owner.nil?
+
+    stream = owner.streams.find_by_name(params[:name])
+    return render nothing: true, status: 404 if stream.nil?
+
+    stream.update(status: :opened)
 
     downstream_rewrite(path: stream.path)
   end
@@ -34,6 +51,12 @@ class ApplicationController < ActionController::Base
 
     @stream = @owner.streams.find_by_name(params[:name])
     return render nothing: true, status: 404 if @stream.nil?
+
+    if request.xhr?
+      return render nothing: true, status: 201 if @stream.created?
+
+      return render partial: 'stream.html', locals: {stream: @stream, stream_class: "stream-full"}
+    end
 
     if @stream.gisted?
       return redirect_to "https://gist.github.com#{@stream.gist_path}/raw", status: 301
@@ -46,6 +69,7 @@ class ApplicationController < ActionController::Base
 
   def dash
     @streams = @user.streams.
+      where.not(status: Stream.statuses[:created]).
       paginate(:page => params[:page], :per_page => 10).
       order(created_at: :desc)
   end
@@ -113,7 +137,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate
-    anon_authenticate || token_authenticate || render_unauthorized
+    github_authenticate || anon_authenticate || token_authenticate || render_unauthorized
   end
 
   def token_authenticate
@@ -128,6 +152,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def github_authenticate
+    @user = User.find_by(login: github_user.login) if github_authenticated?
+  end
+
   def render_unauthorized
     self.headers['WWW-Authenticate'] = 'Token realm="Application"'
     render nothing: true, status: 401
@@ -136,6 +164,16 @@ class ApplicationController < ActionController::Base
   def render_errors(*errors)
     render status: 400, json: {
       errors: errors
+    }
+  end
+
+  def render_lite_stream(stream)
+    render status: 200, json: {
+      owner: stream.owner,
+      name: stream.name,
+      status: stream.status,
+      url: stream_url(stream.owner, stream.name),
+      scriptURL: lite_script_url(stream.owner, stream.name),
     }
   end
 

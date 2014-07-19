@@ -13,9 +13,11 @@ Rails.application.routes.draw do
     get '/' => 'application#dash', as: :dash
   end
 
-  post '/'             => 'application#record'
-  put  '/:owner/:name' => 'application#update'
-  get  '/:owner/:name' => 'application#playback', as: :stream
+  post '/:owner/:name'    => 'application#record_lite'
+  post '/'                => 'application#record'
+  put  '/:owner/:name'    => 'application#update'
+  get  '/:owner/:name.sh' => 'application#lite_script', as: :lite_script
+  get  '/:owner/:name'    => 'application#playback', as: :stream
 
   get '/' => 'application#splash', as: :splash
 

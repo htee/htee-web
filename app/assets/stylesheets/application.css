@@ -21,6 +21,8 @@ pre.stream, .gist-line, .gist {
 }
 
 pre.stream-full {
+  min-height: 200px;
+  height: 75vh;
   height: calc(100vh - 200px);
 }
 
@@ -79,4 +81,8 @@ img.gravatar-img {
 
 .finished {
   color: #333333;
+}
+
+.modal-dialog {
+  width: 900px;
 }
