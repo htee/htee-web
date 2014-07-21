@@ -124,6 +124,21 @@ class ApplicationController < ActionController::Base
     render partial: 'config.toml', content_type: 'application/octet-stream'
   end
 
+  def script
+    owner  = User.find_by(login: params[:owner])
+    return render nothing: true, status: 404 if owner.nil?
+
+    stream = owner.streams.find_by_name(params[:name])
+    return render nothing: true, status: 404 if stream.nil?
+
+    @lite_bin   = Htee.config.lite_bin
+    @stream_url = stream_url(owner.login, stream.name)
+
+    render :plain,
+      template: 'application/script.sh',
+      layout:   false
+  end
+
   def downstream_rewrite(request = {})
     render status: 202, json: request_hash.merge(request)
   end
@@ -173,7 +188,7 @@ class ApplicationController < ActionController::Base
       name: stream.name,
       status: stream.status,
       url: stream_url(stream.owner, stream.name),
-      scriptURL: lite_script_url(stream.owner, stream.name),
+      scriptURL: script_url(stream.owner, stream.name),
     }
   end
 
