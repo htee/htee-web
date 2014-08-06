@@ -15,6 +15,7 @@ gem 'gravatar_image_tag'
 gem 'toml'
 gem 'rack-client'
 gem 'foreman'
+gem 'rails_12factor'
 
 group :development do
   gem 'spring'
