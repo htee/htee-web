@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
 
     stream.update(status: :opened)
 
-    downstream_rewrite(path: stream.path)
+    downstream_rewrite(path: stream.path, method: 'POST')
   end
 
   def playback
