@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception, except: [:record, :record_lite]
+  protect_from_forgery with: :exception, except: [:record, :record_new]
 
   before_action :authenticate, only: :record
   before_action :find_user,    only: [:dash, :settings, :config_file, :delete]
@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   def record
     if request.xhr?
       stream = @user.streams.create(status: :created)
-      render_lite_stream(stream)
+      render_new_stream(stream)
     else
       stream = @user.streams.create(status: :opened)
 
@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def record_lite
+  def record_new
     owner = User.find_by(login: params[:owner])
     return render nothing: true, status: 404 if owner.nil?
 
@@ -104,21 +104,6 @@ class ApplicationController < ActionController::Base
     render partial: 'config.toml', content_type: 'application/octet-stream'
   end
 
-  def script
-    owner  = User.find_by(login: params[:owner])
-    return render nothing: true, status: 404 if owner.nil?
-
-    stream = owner.streams.find_by_name(params[:name])
-    return render nothing: true, status: 404 if stream.nil?
-
-    @lite_bin   = Htee.config.lite_bin
-    @stream_url = stream_url(owner.login, stream.name)
-
-    render :plain,
-      template: 'application/script.sh',
-      layout:   false
-  end
-
   def downstream_rewrite(request = {})
     render status: 202, json: request_hash.merge(request)
   end
@@ -162,13 +147,12 @@ class ApplicationController < ActionController::Base
     }
   end
 
-  def render_lite_stream(stream)
+  def render_new_stream(stream)
     render status: 200, json: {
       owner: stream.owner,
       name: stream.name,
       status: stream.status,
-      url: stream_url(stream.owner, stream.name),
-      scriptURL: script_url(stream.owner, stream.name),
+      url: stream_url(stream.owner, stream.name)
     }
   end
 

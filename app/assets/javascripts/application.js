@@ -105,11 +105,11 @@ $( document ).ready(function() {
     })
   }
 
-  $("#lite-stream-modal").on("show.bs.modal", function(e) {
+  $("#new-stream-modal").on("show.bs.modal", function(e) {
     $.post("/", function(data) {
-      $("#lite-stream-modal").find("pre")[0].innerText = "| bash <(curl -Ls " + data.scriptURL + ")"
+      $("#new-stream-modal").find("pre")[0].innerText = "| tee >(curl -NH 'TE: chunked' -T - " + data.url + ")"
 
-      pollCreatedStream(data.url, $("#lite-stream-modal"))
+      pollCreatedStream(data.url, $("#new-stream-modal"))
     })
   })
 })
