@@ -83,26 +83,33 @@ $( document ).ready(function() {
   })
 
   var pollCreatedStream = function(url, target) {
-    $.ajax(url, {
+    hidden = false
+
+    request = $.ajax(url, {
       type: "GET",
       statusCode: {
         200: function(response) {
           stream = $.parseHTML(response)
-          modal = $(target).find(".modal-content")
+          streamModal = $("#show-stream-modal")
+          streamContent = streamModal.find(".modal-content")
 
-          modal.replaceWith(stream)
+          streamContent.children().replaceWith(stream)
 
           playbackStream($(stream).find("pre")[0])
 
           $(target).on('hidden.bs.modal', function (e) {
-            $(stream).replaceWith(modal)
+            streamModal.modal('show')
           })
+
+          $(target).modal('hide')
         },
         201: function(response) {
-          setTimeout(function() { pollCreatedStream(url, target) }, 1000)
+          setTimeout(function() { if(!hidden) pollCreatedStream(url, target) }, 1000)
         },
       },
     })
+
+    $(target).on('hidden.bs.modal', function (e) { hidden = true })
   }
 
   $("#new-stream-modal").on("show.bs.modal", function(e) {
