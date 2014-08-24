@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception, except: [:record, :record_lite, :update]
+  protect_from_forgery with: :exception, except: [:record, :record_lite]
 
   before_action :authenticate, only: :record
   before_action :find_user,    only: [:dash, :settings, :config_file, :delete]
@@ -93,26 +93,6 @@ class ApplicationController < ActionController::Base
       redirect_to dash_path
     else
       redirect_to :back
-    end
-  end
-
-  def update
-    owner = User.find_by(login: params[:owner])
-    return render nothing: true, status: 404 if owner.nil?
-
-    stream = owner.streams.find_by_name(params[:name])
-    return render nothing: true, status: 404 if stream.nil?
-
-    if params[:status].nil?
-      return render_errors('Missing required status parameter')
-    end
-
-    status = params[:status].to_sym
-
-    if stream.update(status: status)
-      render nothing: true, status: 204
-    else
-      return render_errors(*stream.errors.full_messages)
     end
   end
 

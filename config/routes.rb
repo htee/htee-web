@@ -14,8 +14,8 @@ Rails.application.routes.draw do
   end
 
   post '/:owner/:name'    => 'application#record_lite'
+  put  '/:owner/:name'    => 'application#record_lite'
   post '/'                => 'application#record'
-  put  '/:owner/:name'    => 'application#update'
   get  '/:owner/:name.sh' => 'application#script', as: :script
   get  '/:owner/:name'    => 'application#playback', as: :stream
 
